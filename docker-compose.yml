@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  db1:
+    image: postgres:14.7-bullseye
+    tty: true
+    container_name: postgres_master
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: 4444wwww
+    restart: always
+    ports:
+      - 15432:5432
+    networks:
+      - app-net
+    volumes:
+      - data-volume1:/var/lib/postgres_master
+      - ./ddl:/docker-entrypoint-initdb.d
+  db2:
+    image: postgres:14.7-bullseye
+    tty: true
+    container_name: postgres_replica1
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: 4444wwww
+    restart: always
+    ports:
+      - 25432:5432
+    networks:
+      - app-net
+    volumes:
+      - data-volume2:/var/lib/postgres_replica1
+      - ./ddl:/docker-entrypoint-initdb.d
+  db3:
+    image: postgres:14.7-bullseye
+    tty: true
+    container_name: postgres_replica2
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: 4444wwww
+    restart: always
+    ports:
+      - 35432:5432
+    networks:
+      - app-net
+    volumes:
+      - data-volume3:/var/lib/postgres_replica2
+      - ./ddl:/docker-entrypoint-initdb.d
+volumes:
+  data-volume1:
+  data-volume2:
+  data-volume3:
+networks:
+  app-net:
+    driver: bridge
